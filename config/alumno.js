@@ -7,7 +7,7 @@ function profesoresFiltrados() {
         pagina: pagina,
         registrosPorPagina: registrosPorPagina
     };
-
+    
     fetch(url, {
         method: "POST",
         body: JSON.stringify(data),
