@@ -1,39 +1,12 @@
-function getProfesor(){
-
-    var select = document.getElementById("departamentos");
-    var selected = select.value;
-    var url = "../view/alumno_sw.php";
-    var data = {table: "profesor", selected: selected};
-    console.log(selected);
-    fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json"
-        },
-    })
-    .then((res) => res.json())
-    .catch((error) => console.error("Error:", error))
-    .then(function(response){
-        var p = document.getElementById("msg")
-        var select = document.getElementById("profesores")
-        p.innerHTML = response.msg
-        select.innerHTML = "";
-        var opt2 = document.createElement('option');
-        opt2.innerHTML = "--seleccionar";
-        select.appendChild(opt2);
-        for (var i = 0; i < response.data.length; i++){
-            var opt = document.createElement('option');
-            opt.value = response.data[i].DNI;
-            opt.innerHTML = response.data[i].NOMBRE+" "+response.data[i].APELLIDO_1+" "+response.data[i].APELLIDO_2;
-            select.appendChild(opt);
-        }
-    })
-}
-
 function profesoresFiltrados() {
-    var url = "../../config/profesor_sw.php";  
-    var data = { action: "fetch_profesores" };
+    var url = "../../config/profesor_sw.php";
+    var pagina;
+    var registrosPorPagina;
+    var data = { 
+        action: "fetch_profesores",
+        pagina: pagina,
+        registrosPorPagina: registrosPorPagina
+    };
 
     fetch(url, {
         method: "POST",
@@ -49,6 +22,7 @@ function profesoresFiltrados() {
         const cabeceras = ["DNI", "APELLIDO_1", "APELLIDO_2", "NOMBRE", "DIRECCION", "LOCALIDAD", "PROVINCIA", "FECHA_NACIMIENTO", "ID_CATEGORIA", "ID_DEPARTAMENTO", "ACCIONES"];
         var tr = document.createElement("tr");
 
+        theadprofesor.innerHTML = "";
         for (let i = 0; i < cabeceras.length; i++) {
             var th = document.createElement("th");
             th.appendChild(document.createTextNode(cabeceras[i]));
@@ -57,9 +31,10 @@ function profesoresFiltrados() {
         
         theadprofesor.appendChild(tr);
 
-        for (let i = 0; i < response.data.length; i++) {
+        tbodyprofesor.innerHTML = "";
+        for (let i = 0; i < response.data.data.length; i++) {
             var tr = document.createElement("tr");
-            Object.values(response.data[i]).forEach(val => {
+            Object.values(response.data.data[i]).forEach(val => {
                 var td = document.createElement("td");
                 td.appendChild(document.createTextNode(val));
                 tr.appendChild(td);
@@ -82,36 +57,32 @@ function profesoresFiltrados() {
 
             tbodyprofesor.appendChild(tr);
         }
+
+        var totalPaginas = Math.ceil(response.data.total / registrosPorPagina);
+        actualizarPaginacion(totalPaginas, pagina);
+
     })
     .catch((error) => console.error("Error:", error));
 }
 
+function actualizarPaginacion(totalPaginas, paginaActual) {
+    var paginacion = document.querySelector(".pagination");
+    paginacion.innerHTML = '';
 
+    // Agregar 'Primera' y 'Anterior' si no estamos en la primera página
+    if (paginaActual > 1) {
+        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(1)">Primera</a></li>`;
+        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${paginaActual - 1})">Anterior</a></li>`;
+    }
 
+    // Generar números de página
+    for (let i = 1; i <= totalPaginas; i++) {
+        paginacion.innerHTML += `<li class="page-item ${i === paginaActual ? 'active' : ''}"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${i})">${i}</a></li>`;
+    }
 
-//CARGA DE DEPARTAMENTOS
-
-function getDepartamentos(){
-    var url = "../view/alumno_sw.php";
-    var data = {table: "departamentos"};
-    fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json"
-        },
-    })
-    .then((res) => res.json())
-    .catch((error) => console.error("Error:", error))
-    .then(function(response){
-        var p = document.getElementById("msg")
-        var select = document.getElementById("departamentos")
-        p.innerHTML = response.msg
-        for (var i = 0; i < response.data.length; i++){
-            var opt = document.createElement('option');
-            opt.value = response.data[i].CODIGO;
-            opt.innerHTML = response.data[i].NOMBRE;
-            select.appendChild(opt);
-        }
-    })
+    // Agregar 'Siguiente' y 'Última' si no estamos en la última página
+    if (paginaActual < totalPaginas) {
+        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${paginaActual + 1})">Siguiente</a></li>`;
+        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${totalPaginas})">Última</a></li>`;
+    }
 }

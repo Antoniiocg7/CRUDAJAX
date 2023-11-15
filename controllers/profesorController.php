@@ -8,22 +8,19 @@ class ProfesorController{
             $this->model = new ProfesorModel();
             
         }
-
-        public function obtenerProfesores($pagina_actual, $registros_pagina, $dni, $id_departamento){
-            return ($this->model->obtenerProfesoresFiltrado($pagina_actual, $registros_pagina, $dni, $id_departamento) != false) ? 
-            $this->model->obtenerProfesoresFiltrado($pagina_actual, $registros_pagina, $dni, $id_departamento) : false;
-        }
-
-        public function mostrar($dni){
-            return ($this->model->mostrar($dni) != false) ? $this->model->mostrar($dni) : header("Location: index.php");
-        }
-
-        public function pruebaMostrar() {
-            $result = $this->model->pruebaMostrar();
+        
+        //TODO: CAMBIAR ESTO PARA QUE NO SEA FIJO
+        public function mostrar($pagina = 1, $registrosPorPagina = 10) {
+            $totalRegistros = $this->model->contarProfesores();
+            $result = $this->model->mostrar($pagina, $registrosPorPagina);
+        
             if ($result != false) {
-                return $result;
+                return [
+                    'data' => $result,
+                    'total' => $totalRegistros
+                ];
             } else {
-                header("Location: ../alumno.html");
+                header("Location: ../view/profesores/index.html");
                 exit;  
             }
         }

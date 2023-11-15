@@ -62,16 +62,20 @@ class ProfesorModel{
         return $paginador;
     }
 
-    public function mostrar($dni) {
-        $stmt = $this->PDO->prepare("SELECT * FROM profesor where dni = :dni limit 1");
-        $stmt->bindParam(":dni", $dni);
-        return ($stmt->execute()) ? $stmt->fetch() : false;
-    }
-
-    public function pruebaMostrar(){
-        $stmt = $this->PDO->prepare("SELECT * FROM profesor limit 10");
+    public function mostrar($pagina, $registrosPorPagina){
+        $inicio = ($pagina - 1) * $registrosPorPagina;
+        $stmt = $this->PDO->prepare("SELECT * FROM profesor LIMIT :inicio, :registros");
+        $stmt->bindParam(':inicio', $inicio, PDO::PARAM_INT);
+        $stmt->bindParam(':registros', $registrosPorPagina, PDO::PARAM_INT);
         return ($stmt->execute()) ? $stmt->fetchAll(PDO::FETCH_ASSOC) : false;
     }
+    
+    public function contarProfesores() {
+        $stmt = $this->PDO->prepare("SELECT COUNT(*) FROM profesor");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+    
 
     public function guardarProfesor($dni,$apellido_1,$apellido_2,$nombre,$direccion,$localidad,$provincia,$fecha_ingreso,$id_categoria,$id_departamento){
         $stmt = $this->PDO->prepare(
