@@ -13,7 +13,7 @@
     <input type="button" value="Crear nuevo profesor" class="btn btn-success mt-3">
     <br>
     <label for="registros" class="text-light mt-4">Registros por página:</label>
-    <input type="number" class="btn bg-light mx-3 mt-0" id="registros" placeholder="10">
+    <input type="number" onchange="profesoresFiltrados()" class="btn bg-light mx-3 mt-0" id="registros" placeholder="10" value="10">
     <table id="profesor" class="table table-dark table-striped my-4">
         <thead id="theadprofesor">
             

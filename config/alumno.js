@@ -1,7 +1,8 @@
-function profesoresFiltrados() {
+function profesoresFiltrados(paginaSeleccionada = 1) {
     var url = "../../config/profesor_sw.php";
-    var pagina;
-    var registrosPorPagina;
+    var pagina = paginaSeleccionada;
+    var registrosPorPaginaInput = document.getElementById('registros');
+    var registrosPorPagina = parseInt(registrosPorPaginaInput.value);
     var data = { 
         action: "fetch_profesores",
         pagina: pagina,
@@ -17,6 +18,17 @@ function profesoresFiltrados() {
     })
     .then((res) => res.json())
     .then(function(response){
+        // Actualizar el valor máximo permitido en el input
+        var totalRegistros = response.data.total;
+        registrosPorPaginaInput.setAttribute('min', '1');
+        registrosPorPaginaInput.setAttribute('max', totalRegistros.toString());
+
+        // Validación de registrosPorPagina
+        if (registrosPorPagina < 1 || registrosPorPagina > totalRegistros) {
+            alert("El número de registros por página debe estar entre 1 y " + totalRegistros);
+            return;
+        }
+
         var theadprofesor = document.getElementById("theadprofesor");
         var tbodyprofesor = document.getElementById("tbodyprofesor");
         const cabeceras = ["DNI", "APELLIDO_1", "APELLIDO_2", "NOMBRE", "DIRECCION", "LOCALIDAD", "PROVINCIA", "FECHA_NACIMIENTO", "ID_CATEGORIA", "ID_DEPARTAMENTO", "ACCIONES"];
@@ -60,29 +72,37 @@ function profesoresFiltrados() {
 
         var totalPaginas = Math.ceil(response.data.total / registrosPorPagina);
         actualizarPaginacion(totalPaginas, pagina);
-
     })
     .catch((error) => console.error("Error:", error));
 }
 
 function actualizarPaginacion(totalPaginas, paginaActual) {
-    var paginacion = document.querySelector(".pagination");
+    const paginacion = document.querySelector(".pagination");
     paginacion.innerHTML = '';
 
-    // Agregar 'Primera' y 'Anterior' si no estamos en la primera página
-    if (paginaActual > 1) {
-        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(1)">Primera</a></li>`;
-        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${paginaActual - 1})">Anterior</a></li>`;
+    if (totalPaginas <= 1) return;
+
+    agregarBoton(paginacion, 'Primera', 1, paginaActual > 1);
+    agregarBoton(paginacion, 'Anterior', paginaActual - 1, paginaActual > 1);
+    agregarBoton(paginacion, 'Siguiente', paginaActual + 1, paginaActual < totalPaginas);
+    agregarBoton(paginacion, 'Última', totalPaginas, paginaActual < totalPaginas);
+}
+
+function agregarBoton(paginacion, texto, pagina, habilitado) {
+    var li = document.createElement('li');
+    li.className = `page-item ${habilitado ? '' : 'disabled'}`;
+    
+    var a = document.createElement('a');
+    a.className = 'page-link bg-dark text-light';
+    a.textContent = texto;
+    
+    if (habilitado) {
+        a.addEventListener('click', function(event) {
+            event.preventDefault();
+            profesoresFiltrados(pagina);
+        });
     }
 
-    // Generar números de página
-    for (let i = 1; i <= totalPaginas; i++) {
-        paginacion.innerHTML += `<li class="page-item ${i === paginaActual ? 'active' : ''}"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${i})">${i}</a></li>`;
-    }
-
-    // Agregar 'Siguiente' y 'Última' si no estamos en la última página
-    if (paginaActual < totalPaginas) {
-        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${paginaActual + 1})">Siguiente</a></li>`;
-        paginacion.innerHTML += `<li class="page-item"><a class="page-link bg-dark text-light" href="#" onclick="profesoresFiltrados(${totalPaginas})">Última</a></li>`;
-    }
+    li.appendChild(a);
+    paginacion.appendChild(li);
 }

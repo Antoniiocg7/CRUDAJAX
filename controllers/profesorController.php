@@ -10,7 +10,7 @@ class ProfesorController{
         }
         
         //TODO: CAMBIAR ESTO PARA QUE NO SEA FIJO
-        public function mostrar($pagina = 1, $registrosPorPagina = 10) {
+        public function mostrar($pagina, $registrosPorPagina) {
             $totalRegistros = $this->model->contarProfesores();
             $result = $this->model->mostrar($pagina, $registrosPorPagina);
         
