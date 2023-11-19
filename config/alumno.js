@@ -151,9 +151,7 @@ function agregarProfesor() {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data.response);
-        const modal = document.getElementById("modalAgregarProfesor")
-        modal.classList.remove("show")
-        modal.style.display = "none"
+        cerrarModalInsert();
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -167,5 +165,11 @@ function modalAgregarProfesores() {
     modal.classList.add("show")
     modal.style.display = "block"
 
+}
+
+function cerrarModalInsert(){
+    const modal = document.getElementById("modalAgregarProfesor")
+    modal.classList.remove("show")
+    modal.style.display = "none"
 }
 
