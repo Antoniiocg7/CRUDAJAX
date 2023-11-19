@@ -18,12 +18,11 @@ function profesoresFiltrados(paginaSeleccionada = 1) {
     })
     .then((res) => res.json())
     .then(function(response){
-        // Actualizar el valor máximo permitido en el input
+        
         var totalRegistros = response.data.total;
         registrosPorPaginaInput.setAttribute('min', '1');
         registrosPorPaginaInput.setAttribute('max', totalRegistros.toString());
 
-        // Validación de registrosPorPagina
         if (registrosPorPagina < 1 || registrosPorPagina > totalRegistros) {
             alert("El número de registros por página debe estar entre 1 y " + totalRegistros);
             return;
@@ -95,14 +94,78 @@ function agregarBoton(paginacion, texto, pagina, habilitado) {
     var a = document.createElement('a');
     a.className = 'page-link bg-dark text-light';
     a.textContent = texto;
-    
+    a.style.cursor = 'pointer';
+
     if (habilitado) {
         a.addEventListener('click', function(event) {
             event.preventDefault();
             profesoresFiltrados(pagina);
         });
+    } else {
+        a.style.pointerEvents = 'none'; 
+        a.style.cursor = 'default'; 
     }
 
     li.appendChild(a);
     paginacion.appendChild(li);
 }
+
+function agregarProfesor() {
+    
+    var dni = document.getElementById('dni').value;
+    var apellido1 = document.getElementById('apellido1').value;
+    var apellido2 = document.getElementById('apellido2').value;
+    var nombre = document.getElementById('nombre').value;
+    var direccion = document.getElementById('direccion').value;
+    var localidad = document.getElementById('localidad').value;
+    var provincia = document.getElementById('provincia').value;
+    var fechaIngreso = document.getElementById('fechaIngreso').value;
+    var idCategoria = document.getElementById('idCategoria').value;
+    var idDepartamento = document.getElementById('idDepartamento').value;
+
+    var profesor = {
+        dni: dni,
+        apellido1: apellido1,
+        apellido2: apellido2,
+        nombre: nombre,
+        direccion: direccion,
+        localidad: localidad,
+        provincia: provincia,
+        fechaIngreso: fechaIngreso,
+        idCategoria: idCategoria,
+        idDepartamento: idDepartamento
+    };
+
+    var url = "../../config/profesor_sw.php";
+    var data = { 
+        action: "add_profesor",
+        profesor: profesor
+    };
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data.response);
+        const modal = document.getElementById("modalAgregarProfesor")
+        modal.classList.remove("show")
+        modal.style.display = "none"
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+
+}
+
+
+function modalAgregarProfesores() {
+    const modal = document.getElementById("modalAgregarProfesor")
+    modal.classList.add("show")
+    modal.style.display = "block"
+
+}
+

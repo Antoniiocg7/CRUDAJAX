@@ -24,7 +24,7 @@ class ProfesorModel{
     }
     
 
-    public function guardarProfesor($dni,$apellido_1,$apellido_2,$nombre,$direccion,$localidad,$provincia,$fecha_ingreso,$id_categoria,$id_departamento){
+    public function insertarProfesor($dni,$apellido_1,$apellido_2,$nombre,$direccion,$localidad,$provincia,$fecha_ingreso,$id_categoria,$id_departamento){
         $stmt = $this->PDO->prepare(
             "INSERT INTO profesor (dni,apellido_1,apellido_2,nombre,direccion,localidad,provincia,fecha_ingreso,id_categoria,id_departamento) 
             VALUES (:dni, :apellido_1, :apellido_2, :nombre, :direccion, :localidad, :provincia, :fecha_ingreso, :id_categoria, :id_departamento)"
@@ -39,7 +39,7 @@ class ProfesorModel{
         $stmt->bindParam(":fecha_ingreso", $fecha_ingreso);
         $stmt->bindParam(":id_categoria", $id_categoria);
         $stmt->bindParam(":id_departamento", $id_departamento);
-        return ($stmt->execute()) ? $dni : false;
+        return ($stmt->execute());
     }
 
 }

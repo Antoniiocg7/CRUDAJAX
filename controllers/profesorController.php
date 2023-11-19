@@ -9,7 +9,6 @@ class ProfesorController{
             
         }
         
-        //TODO: CAMBIAR ESTO PARA QUE NO SEA FIJO
         public function mostrar($pagina, $registrosPorPagina) {
             $totalRegistros = $this->model->contarProfesores();
             $result = $this->model->mostrar($pagina, $registrosPorPagina);
@@ -26,8 +25,7 @@ class ProfesorController{
         }
         
 
-        public function guardar($dni,$apellido_1,$apellido_2,$nombre,$direccion,$localidad,$provincia,$fecha_ingreso,$id_categoria,$id_departamento){
-            $dni = $this->model-> guardarProfesor($dni,$apellido_1,$apellido_2,$nombre,$direccion,$localidad,$provincia,$fecha_ingreso,$id_categoria,$id_departamento);
-            return ($dni != false) ? header("Location: show.php?dni=".$dni)  : header("Location: create.php");
+        public function insertarProfesor($dni,$apellido_1,$apellido_2,$nombre,$direccion,$localidad,$provincia,$fecha_ingreso,$id_categoria,$id_departamento){
+            return $this->model-> insertarProfesor($dni,$apellido_1,$apellido_2,$nombre,$direccion,$localidad,$provincia,$fecha_ingreso,$id_categoria,$id_departamento);
         }
 }
