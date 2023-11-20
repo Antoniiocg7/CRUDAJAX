@@ -1,4 +1,7 @@
 <?php
+
+header('Content-Type: application/json');
+
 require_once "../controllers/profesorController.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
@@ -9,46 +12,49 @@ if (isset($data['action'])) {
 
     switch ($data['action']) {
         case 'fetch_profesores':
+
+            $filtro = $data['filtro']?? null;
+        
+        
             $response = $profesorController->mostrar($data['pagina'], $data['registrosPorPagina']);
-            break;
+        break;
         
-        case 'add_profesor':
-            $dataProfesor = $data['profesor'];
-        
-            if (isset($dataProfesor['dni'], $dataProfesor['apellido1'], $dataProfesor['apellido2'], 
-                        $dataProfesor['nombre'], $dataProfesor['direccion'], $dataProfesor['localidad'], 
-                        $dataProfesor['provincia'], $dataProfesor['fechaIngreso'], 
-                        $dataProfesor['idCategoria'], $dataProfesor['idDepartamento']
+        case 'add_profesor':        
+            if (isset($data['dni'], $data['apellido1'], $data['apellido2'], 
+                        $data['nombre'], $data['direccion'], $data['localidad'], 
+                        $data['provincia'], $data['fechaIngreso'], 
+                        $data['idCategoria'], $data['idDepartamento']
                     )
                 ){
                 
-                
                 $response = $profesorController->insertarProfesor(
-                    $dataProfesor['dni'],
-                    $dataProfesor['apellido1'],
-                    $dataProfesor['apellido2'],
-                    $dataProfesor['nombre'],
-                    $dataProfesor['direccion'],
-                    $dataProfesor['localidad'],
-                    $dataProfesor['provincia'],
-                    $dataProfesor['fechaIngreso'],
-                    $dataProfesor['idCategoria'],
-                    $dataProfesor['idDepartamento']
+                    $data['dni'],
+                    $data['apellido1'],
+                    $data['apellido2'],
+                    $data['nombre'],
+                    $data['direccion'],
+                    $data['localidad'],
+                    $data['provincia'],
+                    $data['fechaIngreso'],
+                    $data['idCategoria'],
+                    $data['idDepartamento']
                 );
                 
             } else {
                 $response = ['error' => 'Faltan campos obligatorios en el formulario.'];
             }
-            break;
+        break;
 
         case 'delete_profesor':
             if (isset($data['dni'])) {
+            
                 $dni = $data['dni'];
+            
                 $response = $profesorController->eliminarProfesor($dni);
             } else {
                 $response = ['error' => 'Falta el DNI para la eliminación.'];
             }
-            break;
+        break;
 
         case 'edit_profesor':
             if (isset($data['profesor'])) {

@@ -15,6 +15,7 @@
     <br>
     <label for="registros" class="text-light mt-4">Registros por página:</label>
     <input type="number" onchange="profesoresFiltrados()" class="btn bg-light mx-3 mt-0" id="registros" placeholder="10" value="10">
+    <input type="text" id="buscador" placeholder="Busca por cualquier valor.."  />
     <table id="profesor" class="table table-dark table-striped my-4">
         <thead id="theadprofesor">
             
@@ -100,7 +101,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="button"  value="Cancelar" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <button type="button" id="botonConfirmarEliminacion" class="btn btn-danger" onclick="eliminarProfesor(dni)">Eliminar</button>
+                    <button type="button" id="botonConfirmarEliminacion" class="btn btn-danger">Eliminar</button>
                 </div>
             </div>
         </div>

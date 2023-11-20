@@ -30,6 +30,7 @@ class ProfesorController{
     }
 
     public function eliminarProfesor($dni) {
+       
         return $this->model->eliminarProfesor($dni);
     }
 
