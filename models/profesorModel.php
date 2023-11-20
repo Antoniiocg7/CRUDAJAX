@@ -42,4 +42,41 @@ class ProfesorModel{
         return ($stmt->execute());
     }
 
+    public function eliminarProfesor($dni) {
+        $stmt = $this->PDO->prepare("DELETE FROM profesor WHERE dni = :dni");
+        $stmt->bindParam(":dni", $dni);
+        return ($stmt->execute());
+    }    
+
+    public function modificarProfesor($dni, $apellido1, $apellido2, $nombre, $direccion, $localidad, $provincia, $fechaIngreso, $idCategoria, $idDepartamento) {
+        
+        $stmt = $this->PDO->prepare("UPDATE profesor SET 
+        
+            apellido_1 = :apellido1, 
+            apellido_2 = :apellido2, 
+            nombre = :nombre, 
+            direccion = :direccion, 
+            localidad = :localidad, 
+            provincia = :provincia, 
+            fecha_ingreso = :fechaIngreso, 
+            id_categoria = :idCategoria, 
+            id_departamento = :idDepartamento 
+            WHERE dni = :dni"
+            
+        );
+    
+        $stmt->bindParam(":dni", $dni);
+        $stmt->bindParam(":apellido1", $apellido1);
+        $stmt->bindParam(":apellido2", $apellido2);
+        $stmt->bindParam(":nombre", $nombre);
+        $stmt->bindParam(":direccion", $direccion);
+        $stmt->bindParam(":localidad", $localidad);
+        $stmt->bindParam(":provincia", $provincia);
+        $stmt->bindParam(":fechaIngreso", $fechaIngreso);
+        $stmt->bindParam(":idCategoria", $idCategoria);
+        $stmt->bindParam(":idDepartamento", $idDepartamento);
+    
+        return $stmt->execute();
+    }
+
 }

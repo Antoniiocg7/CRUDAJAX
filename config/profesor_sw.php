@@ -40,7 +40,39 @@ if (isset($data['action'])) {
                 $response = ['error' => 'Faltan campos obligatorios en el formulario.'];
             }
             break;
+
+        case 'delete_profesor':
+            if (isset($data['dni'])) {
+                $dni = $data['dni'];
+                $response = $profesorController->eliminarProfesor($dni);
+            } else {
+                $response = ['error' => 'Falta el DNI para la eliminación.'];
+            }
+            break;
+
+        case 'edit_profesor':
+            if (isset($data['profesor'])) {
+                
+                $profesor = $data['profesor'];
+
+                $response = $profesorController->modificarProfesor(
+                    $profesor['dni'],
+                    $profesor['apellido1'],
+                    $profesor['apellido2'],
+                    $profesor['nombre'],
+                    $profesor['direccion'],
+                    $profesor['localidad'],
+                    $profesor['provincia'],
+                    $profesor['fechaIngreso'],
+                    $profesor['idCategoria'],
+                    $profesor['idDepartamento']
+                );
+            } else {
+                $response = ['error' => 'Falta el DNI para la edición.'];
+            }
+            break;
         default:
+
             $response = ['error' => 'Acción no reconocida'];
             break;
     }

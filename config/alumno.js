@@ -32,20 +32,23 @@ function profesoresFiltrados(paginaSeleccionada = 1) {
         var tbodyprofesor = document.getElementById("tbodyprofesor");
         const cabeceras = ["DNI", "APELLIDO_1", "APELLIDO_2", "NOMBRE", "DIRECCION", "LOCALIDAD", "PROVINCIA", "FECHA_NACIMIENTO", "ID_CATEGORIA", "ID_DEPARTAMENTO", "ACCIONES"];
         var tr = document.createElement("tr");
-
+        
         theadprofesor.innerHTML = "";
         for (let i = 0; i < cabeceras.length; i++) {
             var th = document.createElement("th");
             th.appendChild(document.createTextNode(cabeceras[i]));
             tr.appendChild(th);
         }
-        
+
         theadprofesor.appendChild(tr);
+
+        var tabla = document.getElementById("profesor");
 
         tbodyprofesor.innerHTML = "";
         for (let i = 0; i < response.data.data.length; i++) {
             var tr = document.createElement("tr");
             Object.values(response.data.data[i]).forEach(val => {
+                console.log(val);
                 var td = document.createElement("td");
                 td.appendChild(document.createTextNode(val));
                 tr.appendChild(td);
@@ -56,11 +59,21 @@ function profesoresFiltrados(paginaSeleccionada = 1) {
             buttonEditar.type = "button";
             buttonEditar.value = "Editar";
             buttonEditar.className = "btn btn-primary me-2";
+            buttonEditar.onclick = function() {
+                mostrarModalEdicion();
+            };
+        
+            
+            var dniEliminar = tabla.rows[i].cells[0].textContent;
+
 
             var buttonEliminar = document.createElement("input");
             buttonEliminar.type = "button";
             buttonEliminar.value = "Eliminar";
             buttonEliminar.className = "btn btn-danger";
+            buttonEliminar.onclick = function() {
+                mostrarModalEliminacion(dniEliminar);
+            }
 
             td.appendChild(buttonEditar);
             td.appendChild(buttonEliminar);
@@ -159,6 +172,80 @@ function agregarProfesor() {
 
 }
 
+function eliminarProfesor(dni) {
+    mostrarModalEliminacion();
+    var url = "../../config/profesor_sw.php";
+    var data = { 
+        action: "delete_profesor",
+        dni: dni
+    };
+
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        cerrarModalEliminar();
+        profesoresFiltrados();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+function editarProfesor() {
+
+    var dni = document.getElementById('edit_dni').value;
+    var apellido1 = document.getElementById('edit_apellido1').value;
+    var apellido2 = document.getElementById('edit_apellido2').value;
+    var nombre = document.getElementById('edit_nombre').value;
+    var direccion = document.getElementById('edit_direccion').value;
+    var localidad = document.getElementById('edit_localidad').value;
+    var provincia = document.getElementById('edit_provincia').value;
+    var fechaIngreso = document.getElementById('edit_fechaIngreso').value;
+    var idCategoria = document.getElementById('edit_idCategoria').value;
+    var idDepartamento = document.getElementById('edit_idDepartamento').value;
+
+    var profesorEditado = {
+        dni: dni,
+        apellido1: apellido1,
+        apellido2: apellido2,
+        nombre: nombre,
+        direccion: direccion,
+        localidad: localidad,
+        provincia: provincia,
+        fechaIngreso: fechaIngreso,
+        idCategoria: idCategoria,
+        idDepartamento: idDepartamento
+    };
+
+    var url = "../../config/profesor_sw.php";
+    var data = { 
+        action: "edit_profesor",
+        profesor: profesorEditado
+    };
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        
+        cerrarModalEdicion();
+        profesoresFiltrados();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
 
 function modalAgregarProfesores() {
     const modal = document.getElementById("modalAgregarProfesor")
@@ -172,4 +259,35 @@ function cerrarModalInsert(){
     modal.classList.remove("show")
     modal.style.display = "none"
 }
+
+function mostrarModalEliminacion(dni) {
+    var botonConfirmar = document.getElementById("botonConfirmarEliminacion");
+    botonConfirmar.onclick = function() {
+        eliminarProfesor(dni);
+    };
+
+    var modal = document.getElementById("modalConfirmarEliminacion");
+    modal.classList.add("show");
+    modal.style.display = "block";
+}
+
+function cerrarModalEliminar(){
+    const modal = document.getElementById("modalConfirmarEliminacion")
+    modal.classList.remove("show")
+    modal.style.display = "none"
+}
+
+function mostrarModalEdicion() {
+    
+    var modal = document.getElementById("modalModificarProfesor");
+    modal.classList.add("show");
+    modal.style.display = "block";
+}
+
+function cerrarModalEdicion(){
+    const modal = document.getElementById("modalModificarProfesor")
+    modal.classList.remove("show")
+    modal.style.display = "none"
+}
+
 

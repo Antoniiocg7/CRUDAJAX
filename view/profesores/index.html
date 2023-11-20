@@ -34,7 +34,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalAgregarProfesorLabel">Agregar Profesor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cerrarModalInsert()"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formularioAgregarProfesor" class="row g-3 px-5">
@@ -83,6 +83,83 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="cerrarModalInsert()">Cerrar</button>
                     <input type="button" class="btn btn-primary" form="formularioAgregarProfesor" onclick="agregarProfesor()" value="Agregar Profesor">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmarEliminacion" tabindex="-1" aria-labelledby="modalConfirmarEliminacionLabel" aria-hidden="true" onclick="cerrarModalEliminar()">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmarEliminacionLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este profesor?
+                </div>
+                <div class="modal-footer">
+                    <input type="button"  value="Cancelar" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" id="botonConfirmarEliminacion" class="btn btn-danger" onclick="eliminarProfesor(dni)">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalModificarProfesor" tabindex="-1" aria-labelledby="modalModificarProfesorLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalModificarProfesorLabel">Modificar Profesor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="cerrarModalEdicion()"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formularioModificarProfesor" class="row g-3 px-5">
+                        <div class="col-md-6">
+                            <label for="edit_dni" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="edit_dni" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_apellido1" class="form-label">Apellido 1</label>
+                            <input type="text" class="form-control" id="edit_apellido1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_apellido2" class="form-label">Apellido 2</label>
+                            <input type="text" class="form-control" id="edit_apellido2">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="edit_nombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="edit_direccion">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_localidad" class="form-label">Localidad</label>
+                            <input type="text" class="form-control" id="edit_localidad">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_provincia" class="form-label">Provincia</label>
+                            <input type="text" class="form-control" id="edit_provincia">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_fechaIngreso" class="form-label">Fecha de Ingreso</label>
+                            <input type="date" class="form-control" id="edit_fechaIngreso">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_idCategoria" class="form-label">ID Categoría</label>
+                            <input type="number" class="form-control" id="edit_idCategoria">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_idDepartamento" class="form-label">ID Departamento</label>
+                            <input type="number" class="form-control" id="edit_idDepartamento">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="cerrarModalEdicion()">Cerrar</button>
+                    <input type="button" class="btn btn-primary" form="formularioModificarProfesor" onclick="editarProfesor()" value="Guardar Cambios">
                 </div>
             </div>
         </div>
