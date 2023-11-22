@@ -9,9 +9,9 @@ class ProfesorController{
         
     }
     
-    public function mostrar($pagina, $registrosPorPagina) {
+    public function mostrar($pagina, $registrosPorPagina, $filtro) {
         $totalRegistros = $this->model->contarProfesores();
-        $result = $this->model->mostrar($pagina, $registrosPorPagina);
+        $result = $this->model->mostrar($pagina, $registrosPorPagina, $filtro);
     
         if ($result != false) {
             return [
@@ -19,7 +19,6 @@ class ProfesorController{
                 'total' => $totalRegistros
             ];
         } else {
-            header("Location: ../view/profesores/index.html");
             exit;  
         }
     }

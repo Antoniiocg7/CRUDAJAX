@@ -15,7 +15,7 @@
     <br>
     <label for="registros" class="text-light mt-4">Registros por página:</label>
     <input type="number" onchange="profesoresFiltrados()" class="btn bg-light mx-3 mt-0" id="registros" placeholder="10" value="10">
-    <input type="text" id="buscador" placeholder="Busca por cualquier valor.."  />
+    <input type="text" id="buscador" class="btn bg-light" placeholder="Busca cualquier valor.." onkeyup="profesoresFiltrados()" />
     <table id="profesor" class="table table-dark table-striped my-4">
         <thead id="theadprofesor">
             

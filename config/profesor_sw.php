@@ -16,7 +16,7 @@ if (isset($data['action'])) {
             $filtro = $data['filtro']?? null;
         
         
-            $response = $profesorController->mostrar($data['pagina'], $data['registrosPorPagina']);
+            $response = $profesorController->mostrar($data['pagina'], $data['registrosPorPagina'], $data['filtro']);
         break;
         
         case 'add_profesor':        
@@ -76,7 +76,7 @@ if (isset($data['action'])) {
             } else {
                 $response = ['error' => 'Falta el DNI para la edición.'];
             }
-            break;
+            break;    
         default:
 
             $response = ['error' => 'Acción no reconocida'];

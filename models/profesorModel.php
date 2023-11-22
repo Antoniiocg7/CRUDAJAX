@@ -9,10 +9,24 @@ class ProfesorModel{
         $this->PDO = $connection->conectar_bd();
     }
 
-    public function mostrar($pagina, $registrosPorPagina){
+    public function mostrar($pagina, $registrosPorPagina, $filtro){
         try {
+
+            $condiciones = "dni LIKE '%".$filtro."%' OR "
+            ." apellido_1 LIKE '%".$filtro."%' OR "
+            ." apellido_2 LIKE '%".$filtro."%' OR "
+            ." nombre LIKE '%".$filtro."%' OR "
+            ." direccion LIKE '%".$filtro."%' OR "
+            ." localidad LIKE '%".$filtro."%' OR "
+            ." provincia LIKE '%".$filtro."%' OR"
+            ." fecha_ingreso LIKE '%".$filtro."%' OR"
+            ." id_categoria LIKE '%".$filtro."%' OR"
+            ." id_departamento LIKE '%".$filtro."%'";
+;
+
+
             $inicio = ($pagina - 1) * $registrosPorPagina;
-            $stmt = $this->PDO->prepare("SELECT * FROM profesor LIMIT :inicio, :registros");
+            $stmt = $this->PDO->prepare("SELECT * FROM profesor WHERE $condiciones LIMIT :inicio, :registros");
             $stmt->bindParam(':inicio', $inicio, PDO::PARAM_INT);
             $stmt->bindParam(':registros', $registrosPorPagina, PDO::PARAM_INT);
             
@@ -56,10 +70,7 @@ class ProfesorModel{
         
             return $stmt->execute();
         } catch (PDOException $e) {
-            // Manejar la excepción de PDO aquí, por ejemplo, imprimir el mensaje de error.
             echo "Error: " . $e->getMessage();
-            // También puedes lanzar una nueva excepción personalizada si es necesario.
-            // throw new MiExcepcion("Error al ejecutar la consulta: " . $e->getMessage());
         }
         
     }
@@ -68,7 +79,7 @@ class ProfesorModel{
         try {
             $stmt = $this->PDO->prepare("DELETE FROM profesor WHERE DNI = :dni");
             $stmt->bindParam(":dni", $dni);
-            $stmt->execute();
+            return $stmt->execute();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
