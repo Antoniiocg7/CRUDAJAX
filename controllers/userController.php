@@ -17,6 +17,17 @@ class UserController{
         return $this->model->insertarUser($dni,$correo,$hash_pass,$nombre,$apellido_1,$apellido_2,$telefono,$direccion);
     }
 
+    public function obtenerToken($correo){
+        return $this->model->obtenerToken($correo);
+    }
+
+    public function insertarToken($correo,$token_id,$hora){
+        return $this->model->insertarToken($correo,$token_id,$hora);
+    }
+
+    public function obtenerHora($correo){
+        return $this->model->obtenerHora($correo);
+    }
     
 }
 

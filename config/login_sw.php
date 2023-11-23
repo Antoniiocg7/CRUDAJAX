@@ -14,11 +14,12 @@ if (isset($data['action'])) {
 
         case 'register':        
             if (isset($data['dni'], $data['correo'], $data['hash_pass'], 
-                        $data['nombre'], $data['apellido_1'], $data['apellido_2'], 
-                        $data['telefono'], $data['direccion']
-                    )
-                ){
-
+                      $data['nombre'], $data['apellido_1'], $data['apellido_2'], 
+                      $data['telefono'], $data['direccion']) &&
+                !empty($data['dni']) && !empty($data['correo']) && !empty($data['hash_pass']) &&
+                !empty($data['nombre']) && !empty($data['apellido_1']) && !empty($data['apellido_2']) &&
+                !empty($data['telefono']) && !empty($data['direccion'])) {
+        
                 $options = [
                     'cost' => 11
                 ];
@@ -35,34 +36,79 @@ if (isset($data['action'])) {
                     $data['telefono'],
                     $data['direccion'],
                 );
+
+                $resultado = generarToken();
+                $tokenId = $resultado[0];
+                $hora = $resultado[1];
+                $userController->insertarToken($data['correo'],$tokenId,$hora);
+
                 $response = [
-                    'succes' => 'true',
-                    'msg' => 'Usuario creado correctamente'
+                    'success' => true,
+                    'msg' => 'Usuario creado correctamente',
+                    'token' => $tokenId
                 ];
                 
             } else {
-                $response = ['error' => 'Faltan campos obligatorios en el formulario.'];
+                $response = [
+                    'success' => false,
+                    'error' => 'Faltan campos obligatorios en el formulario o algunos están vacíos.'
+                ];
             }
         break;
         
+        
         case 'login':
             if (isset($data['user'], $data['password'])) {
-                // Aquí debes verificar las credenciales
-                // Por ejemplo, supongamos que tienes un método en tu controlador que se llama verificarCredenciales
-                $check = $userController->verificarUser($data['user'], $data['password']);
-                //echo $check;
 
-                // El método verificarCredenciales debería devolver algún tipo de respuesta,
-                // por ejemplo, si las credenciales son correctas o no.
-                $response = ['auth' => $check];
+                $check = $userController->verificarUser($data['user'], $data['password']);
+            
+                $token = $userController->obtenerToken($data['user']);
+                $hora = $userController->obtenerHora($data['user']);
+                
+                if (esTokenValido($hora)) {
+                    
+                    $response = [
+                        'auth' => $check,
+                        'expired' => false,
+                        'token' => $token
+                    ];
+                } else {
+                    
+                    $response = [
+                        'auth' => $check,
+                        'expired' => true
+                    ];
+                }
+                
             } else {
-                echo "hola";
+                
                 $response = [
                     'auth' => false,
                     'error' => 'Faltan campos de usuario o contraseña.'
                 ];
             }
             break;
+            case 'renovarToken':
+                if (isset($data['correo']) && !empty($data['correo'])) {
+        
+                    $resultado = generarToken();
+                    $tokenId = $resultado[0];
+                    $hora = $resultado[1];
+    
+                    $userController->insertarToken($data['correo'], $tokenId, $hora);
+    
+                    $response = [
+                        'success' => true,
+                        'newToken' => $tokenId
+                    ];
+                    
+                } else {
+                    $response = [
+                        'success' => false,
+                        'error' => 'No se proporcionó nuevo token'
+                    ];
+                }
+                break;
     
         default:
 
@@ -70,6 +116,19 @@ if (isset($data['action'])) {
             break;
     }
     echo json_encode($response);
+}
+
+function generarToken() {
+    $tokenId = uniqid('', true);
+    $timestamp = time();
+    return [$tokenId, $timestamp];
+}
+
+
+function esTokenValido($timestamp) {
+    $tiempoActual = time();
+    $diferencia = $tiempoActual - $timestamp;
+    return $diferencia <= 1800;
 }
 
 

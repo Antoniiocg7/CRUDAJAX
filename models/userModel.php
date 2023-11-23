@@ -15,8 +15,7 @@ class UserModel{
             $stmt->bindParam(":correo", $correo);
             $stmt->execute();
             $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            //print_r($user[0]['hash_pass']);
-            //exit();
+            
             if (password_verify($password, $user[0]['hash_pass'])) {
                 return true;
             } else {
@@ -48,6 +47,63 @@ class UserModel{
             echo "Error: " . $e->getMessage();
         }
         
+    }
+
+    public function obtenerToken($correo){
+        try {
+
+            $stmt = $this->PDO->prepare("SELECT token_id, hora FROM users WHERE correo = :correo");
+            $stmt->bindParam(":correo", $correo);
+
+            
+            if ($stmt->execute()) {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+
+                return false;
+            }
+        } catch (PDOException $e) {
+    
+            echo "Error: " . $e->getMessage();
+
+        }
+    }
+
+    public function obtenerHora($correo){
+        try {
+
+            $stmt = $this->PDO->prepare("SELECT hora FROM users WHERE correo = :correo");
+            $stmt->bindParam(":correo", $correo);
+
+            
+            if ($stmt->execute()) {
+                $hora = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $hora['hora'];
+            } else {
+
+                return false;
+            }
+        } catch (PDOException $e) {
+    
+            echo "Error: " . $e->getMessage();
+
+        }
+    }
+
+    public function insertarToken($correo, $token_id, $hora){
+        try {
+
+            $stmt = $this->PDO->prepare("UPDATE users SET token_id = :token_id, hora = :hora WHERE correo = :correo");
+            $stmt->bindParam(":correo", $correo);
+            $stmt->bindParam(":token_id", $token_id);
+            $stmt->bindParam(":hora",$hora);
+            return $stmt->execute();
+            
+        } catch (PDOException $e) {
+    
+            echo "Error: " . $e->getMessage();
+
+        }
     }
 }
 

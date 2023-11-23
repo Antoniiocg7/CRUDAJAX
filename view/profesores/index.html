@@ -6,14 +6,25 @@
     <title>Index</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="../../config/alumno.js"></script>
+    <script src="../../config/login.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 
 <body onload="profesoresFiltrados()" class="mx-5 bg-dark">
     <h1 class="mt-4 text-light">Listado Profesores</h1>
-    <input type="button" value="Crear nuevo profesor" class="btn btn-success mt-3" onclick="modalAgregarProfesores()">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between w-100">
+                <input type="button" value="Crear nuevo profesor" class="btn btn-success mt-2" onclick="modalAgregarProfesores()">
+                <input type="button" value="Cerrar Sesión" class="btn btn-info mt-2" onclick="cerrarSesion()">
+            </div>
+        </div>
+    </nav>
+    
+    
     <br>
-    <label for="registros" class="text-light mt-4">Registros por página:</label>
+    <label for="registros" class="text-light mt-2">Registros por página:</label>
     <input type="number" onchange="profesoresFiltrados()" class="btn bg-light mx-3 mt-0" id="registros" placeholder="10" value="10">
     <input type="text" id="buscador" class="btn bg-light" placeholder="Busca cualquier valor.." onkeyup="profesoresFiltrados()" />
     <table id="profesor" class="table table-dark table-striped my-4">
