@@ -27,6 +27,8 @@
     <label for="registros" class="text-light mt-2">Registros por página:</label>
     <input type="number" onchange="profesoresFiltrados()" class="btn bg-light mx-3 mt-0" id="registros" placeholder="10" value="10">
     <input type="text" id="buscador" class="btn bg-light" placeholder="Busca cualquier valor.." onkeyup="profesoresFiltrados()" />
+    <span class="text-light mx-5">Total de Registros: </span>
+    <span class="text-light mx-2" id="totalRegistros"></span>
     <table id="profesor" class="table table-dark table-striped my-4">
         <thead id="theadprofesor">
             
@@ -34,7 +36,7 @@
         <tbody id="tbodyprofesor">
         </tbody>
     </table>
-
+    
     <nav>
         <ul class="pagination">
             

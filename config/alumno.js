@@ -23,6 +23,7 @@ function profesoresFiltrados(paginaSeleccionada = 1) {
     .then(function(response){
         
         var totalRegistros = response.data.total;
+        document.getElementById('totalRegistros').textContent = totalRegistros;
         registrosPorPaginaInput.setAttribute('min', '1');
         registrosPorPaginaInput.setAttribute('max', totalRegistros.toString());
 
