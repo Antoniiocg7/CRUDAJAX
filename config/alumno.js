@@ -113,22 +113,21 @@ function agregarBoton(paginacion, texto, pagina, habilitado) {
     var li = document.createElement('li');
     li.className = `page-item ${habilitado ? '' : 'disabled'}`;
     
-    var a = document.createElement('a');
-    a.className = 'page-link bg-dark text-light';
-    a.textContent = texto;
-    a.style.cursor = 'pointer';
+    var button = document.createElement('button');
+    button.className = 'page-link bg-dark text-light';
+    button.textContent = texto;
+    button.style.cursor = 'pointer';
 
     if (habilitado) {
-        a.addEventListener('click', function(event) {
-            event.preventDefault();
+        button.addEventListener('click', function(event) {
             profesoresFiltrados(pagina);
         });
     } else {
-        a.style.pointerEvents = 'none'; 
-        a.style.cursor = 'default'; 
+        button.style.pointerEvents = 'none'; 
+        button.style.cursor = 'default'; 
     }
 
-    li.appendChild(a);
+    li.appendChild(button);
     paginacion.appendChild(li);
 }
 
@@ -271,7 +270,7 @@ function cerrarModalEliminar(){
     modal.style.display = "none"
 }
 
-function mostrarModalEdicion( registro ) {
+function mostrarModalEdicion(registro) {
     var dni = document.getElementById('edit_dni');
     var apellido1 = document.getElementById('edit_apellido1');
     var apellido2 = document.getElementById('edit_apellido2');
@@ -356,7 +355,10 @@ function agregarProfesor() {
 function eliminarProfesor(dni) {
 
     var url = "../../config/profesor_sw.php";
-    let data = { action: "delete_profesor", dni: dni };
+    let data = { 
+        action: "delete_profesor", 
+        dni: dni 
+    };
 
     fetch(url, {
         method: 'POST',
