@@ -71,7 +71,6 @@ function profesoresFiltrados(paginaSeleccionada = 1) {
             buttonEditar.value = "Editar";
             buttonEditar.className = "btn btn-primary me-2";
             buttonEditar.onclick = function() {
-                console.log(registro[i])
                 mostrarModalEdicion(registro[i]);
             };
         
